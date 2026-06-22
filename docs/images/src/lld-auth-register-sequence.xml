@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="draw.io">
+  <diagram name="艺术家注册邮箱确认时序图" id="seq-artist-register">
+    <mxGraphModel dx="1200" dy="1250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- 透明占位：撑开画布边界，提供内边距 -->
+        <mxCell id="spacer" value="" style="fillColor=none;strokeColor=none;opacity=0;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="1200" height="1250" as="geometry"/>
+        </mxCell>
+
+        <!-- ===参与者框（顶部）=== -->
+        <!-- Website: 前端页面 - 紫色 -->
+        <mxCell id="p1" value="Website" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="110" height="36" as="geometry"/>
+        </mxCell>
+        <!-- ArtistAuthController: 后端控制器 - 黄色 -->
+        <mxCell id="p2" value="ArtistAuthController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="40" width="150" height="36" as="geometry"/>
+        </mxCell>
+        <!-- ArtistAuthService: 后端服务 - 黄色 -->
+        <mxCell id="p3" value="ArtistAuthService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="40" width="140" height="36" as="geometry"/>
+        </mxCell>
+        <!-- Redis: 缓存 - 红色 -->
+        <mxCell id="p4" value="Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="625" y="40" width="100" height="36" as="geometry"/>
+        </mxCell>
+        <!-- EmailService: 邮件服务 - 绿色 -->
+        <mxCell id="p5" value="EmailService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="785" y="40" width="120" height="36" as="geometry"/>
+        </mxCell>
+        <!-- MySQL: 数据库 - 红色 -->
+        <mxCell id="p6" value="MySQL&lt;br&gt;(artist_account)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="40" width="160" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- 生命线中心X: p1=95, p2=285, p3=490, p4=675, p5=845, p6=1045 -->
+
+        <!-- ===生命线=== -->
+        <mxCell id="life1" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="76" as="sourcePoint"/>
+            <mxPoint x="95" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life2" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="76" as="sourcePoint"/>
+            <mxPoint x="285" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life3" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="76" as="sourcePoint"/>
+            <mxPoint x="490" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life4" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="76" as="sourcePoint"/>
+            <mxPoint x="675" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life5" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="845" y="76" as="sourcePoint"/>
+            <mxPoint x="845" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life6" style="endArrow=none;dashed=1;strokeColor=#999999;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="76" as="sourcePoint"/>
+            <mxPoint x="1045" y="1170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===分组1: 注册流程=== -->
+        <mxCell id="g1" value="注册流程（POST /register）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#333333;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="1090" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- m1: Website → ArtistAuthController: POST /register -->
+        <mxCell id="m1" value="POST /register {email, password, name}" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="160" as="sourcePoint"/>
+            <mxPoint x="285" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m2: ArtistAuthController → ArtistAuthService: register(dto) -->
+        <mxCell id="m2" value="register(registerDto)" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="205" as="sourcePoint"/>
+            <mxPoint x="490" y="205" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m3: ArtistAuthService → MySQL: 校验邮箱唯一 -->
+        <mxCell id="m3" value="SELECT COUNT(*) FROM artist_account WHERE email=?" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="250" as="sourcePoint"/>
+            <mxPoint x="1045" y="250" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m4: MySQL → ArtistAuthService: count=0 -->
+        <mxCell id="m4" value="count=0（邮箱可用）" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="295" as="sourcePoint"/>
+            <mxPoint x="490" y="295" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m5: ArtistAuthService 自调用: bcrypt hash(password) -->
+        <mxCell id="m5" value="bcrypt.hash(password, 10)" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="330" as="sourcePoint"/>
+            <mxPoint x="490" y="370" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="535" y="330"/>
+              <mxPoint x="535" y="370"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m6: ArtistAuthService → Redis: SET verify token -->
+        <mxCell id="m6" value="SET artist:email:verify:{token} {email,hash} EX 86400" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="415" as="sourcePoint"/>
+            <mxPoint x="675" y="415" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m7: Redis → ArtistAuthService: OK -->
+        <mxCell id="m7" value="OK" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="460" as="sourcePoint"/>
+            <mxPoint x="490" y="460" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m8: ArtistAuthService → EmailService: 发验证邮件 -->
+        <mxCell id="m8" value="sendVerifyEmail(email, verifyUrl)" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="505" as="sourcePoint"/>
+            <mxPoint x="845" y="505" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m9: EmailService → ArtistAuthService: 发送成功 -->
+        <mxCell id="m9" value="邮件发送成功" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="845" y="550" as="sourcePoint"/>
+            <mxPoint x="490" y="550" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m10: ArtistAuthService → ArtistAuthController: 返回 verifyUrl -->
+        <mxCell id="m10" value="{verifyUrl}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="595" as="sourcePoint"/>
+            <mxPoint x="285" y="595" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m11: ArtistAuthController → Website: 200 {verifyUrl} -->
+        <mxCell id="m11" value="200 {verifyUrl: &quot;/verify-email?token=...&quot;}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="640" as="sourcePoint"/>
+            <mxPoint x="95" y="640" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===分组2: 邮箱验证=== -->
+        <mxCell id="g2" value="邮箱验证（GET /verify-email?token）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#333333;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="675" width="1090" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- m12: Website → ArtistAuthController: GET /verify-email?token -->
+        <mxCell id="m12" value="GET /verify-email?token={token}" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="730" as="sourcePoint"/>
+            <mxPoint x="285" y="730" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m13: ArtistAuthController → ArtistAuthService: verifyEmail(token) -->
+        <mxCell id="m13" value="verifyEmail(token)" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="775" as="sourcePoint"/>
+            <mxPoint x="490" y="775" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m14: ArtistAuthService → Redis: 读取验证数据 -->
+        <mxCell id="m14" value="GET artist:email:verify:{token}" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="820" as="sourcePoint"/>
+            <mxPoint x="675" y="820" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m15: Redis → ArtistAuthService: 返回注册数据 -->
+        <mxCell id="m15" value="{email, passwordHash, name}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="865" as="sourcePoint"/>
+            <mxPoint x="490" y="865" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m16: ArtistAuthService → MySQL: 创建 artist_account -->
+        <mxCell id="m16" value="INSERT INTO artist_account (email, password_hash, ...)" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="910" as="sourcePoint"/>
+            <mxPoint x="1045" y="910" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m17: MySQL → ArtistAuthService: 返回新账号ID -->
+        <mxCell id="m17" value="artistId（新建账号ID）" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="955" as="sourcePoint"/>
+            <mxPoint x="490" y="955" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m18: ArtistAuthService → Redis: 删除验证 token -->
+        <mxCell id="m18" value="DEL artist:email:verify:{token}" style="endArrow=block;endFill=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="1000" as="sourcePoint"/>
+            <mxPoint x="675" y="1000" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m19: Redis → ArtistAuthService: OK -->
+        <mxCell id="m19" value="OK（已删除）" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="1045" as="sourcePoint"/>
+            <mxPoint x="490" y="1045" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m20: ArtistAuthService → ArtistAuthController: 返回结果 -->
+        <mxCell id="m20" value="{artistId, accessToken}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="1090" as="sourcePoint"/>
+            <mxPoint x="285" y="1090" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- m21: ArtistAuthController → Website: 200 验证成功 -->
+        <mxCell id="m21" value="200 {message: &quot;验证成功，账号已激活&quot;}" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=11;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="1135" as="sourcePoint"/>
+            <mxPoint x="95" y="1135" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===参与者框（底部镜像）=== -->
+        <mxCell id="pb1" value="Website" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1170" width="110" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb2" value="ArtistAuthController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="1170" width="150" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb3" value="ArtistAuthService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1170" width="140" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb4" value="Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="625" y="1170" width="100" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb5" value="EmailService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="785" y="1170" width="120" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb6" value="MySQL&lt;br&gt;(artist_account)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="1170" width="160" height="36" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

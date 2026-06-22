@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="draw.io">
+  <diagram name="功能模块依赖关系图" id="hld-module-rel-001">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Spacer: 撑开画布边界，提供内边距 -->
+        <mxCell id="spacer" value="" style="fillColor=none;strokeColor=none;opacity=0;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="1100" height="400" as="geometry"/>
+        </mxCell>
+
+        <!-- 标题 -->
+        <mxCell id="title" value="巴黎臻藏艺术家平台 — 功能模块依赖关系图" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a237e;" vertex="1" parent="1">
+          <mxGeometry x="30" y="15" width="1040" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 第一层：网站前端 ===== -->
+        <mxCell id="L1_label" value="网站前端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=none;fontSize=11;fontStyle=1;fontColor=#ffffff;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="30" y="90" width="80" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="L1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#90caf9;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="120" y="68" width="950" height="72" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_rg" value="&lt;b&gt;路由守卫模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#5c7bc5&quot;&gt;SRS 3.4 · 登录态控制&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dce8fb;strokeColor=#7baaf7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="135" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_ua" value="&lt;b&gt;用户认证模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#5c7bc5&quot;&gt;SRS 3.5.1 · 注册/登录&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dce8fb;strokeColor=#7baaf7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="293" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_ds" value="&lt;b&gt;档案展示模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#5c7bc5&quot;&gt;SRS 3.5.2 · 公开档案&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dce8fb;strokeColor=#7baaf7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="451" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_de" value="&lt;b&gt;档案编辑模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#5c7bc5&quot;&gt;SRS 3.5.3 · 编辑管理&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dce8fb;strokeColor=#7baaf7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="609" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_fl" value="&lt;b&gt;资料分类管理&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#5c7bc5&quot;&gt;SRS 3.2-5 · 文件分类&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dce8fb;strokeColor=#7baaf7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="767" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fe_en" value="&lt;b&gt;扩展导航预留&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#9e9e9e&quot;&gt;SRS 3.2-6 · 待扩展&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#bdbdbd;fontColor=#757575;fontSize=11;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="925" y="79" width="130" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 第二层：服务后端 ===== -->
+        <mxCell id="L2_label" value="服务后端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e65100;strokeColor=none;fontSize=11;fontStyle=1;fontColor=#ffffff;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="30" y="265" width="80" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="L2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ffe082;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="120" y="243" width="950" height="72" as="geometry"/>
+        </mxCell>
+
+        <!-- 后端模块排列：邮件通知 | 艺术家认证 | 艺术家档案 | 资料文件 | 文件存储 -->
+        <!-- 此顺序使 资料文件→档案、档案→认证 均为短箭头，避免穿越节点 -->
+        <mxCell id="be_em" value="&lt;b&gt;邮件通知模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#b35900&quot;&gt;邮件发送 / 通知&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#ffb74d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="135" y="254" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="be_aa" value="&lt;b&gt;艺术家认证模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#b35900&quot;&gt;注册 / 登录 / Token&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#ffb74d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="325" y="254" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="be_arch" value="&lt;b&gt;艺术家档案模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#b35900&quot;&gt;档案 CRUD / 状态&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#ffb74d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="515" y="254" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="be_mf" value="&lt;b&gt;资料文件模块&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#b35900&quot;&gt;上传 / 分类 / 元数据&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#ffb74d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="705" y="254" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="be_fs" value="&lt;b&gt;文件存储适配&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;color:#b35900&quot;&gt;S3 / OSS 统一接口&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#ffb74d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="895" y="254" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 依赖箭头 ===== -->
+
+        <!-- 前端内部依赖（蓝色） -->
+
+        <!-- 路由守卫 → 用户认证（校验登录态） -->
+        <mxCell id="e_rg_ua" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_rg" target="fe_ua" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 档案展示 → 路由守卫（绕行层上方，避免穿越用户认证） -->
+        <mxCell id="e_ds_rg" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_ds" target="fe_rg" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="516" y="55"/>
+              <mxPoint x="200" y="55"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 档案展示 → 用户认证 -->
+        <mxCell id="e_ds_ua" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_ds" target="fe_ua" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 档案编辑 → 档案展示 -->
+        <mxCell id="e_de_ds" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_de" target="fe_ds" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 档案编辑 → 资料分类管理 -->
+        <mxCell id="e_de_fl" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_de" target="fe_fl" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 跨层依赖（橙色） -->
+
+        <!-- 用户认证 → 邮件通知（底部偏左出发，向左下） -->
+        <mxCell id="e_ua_em" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_ua" target="be_em" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 用户认证 → 艺术家认证（底部偏右出发，向右下） -->
+        <mxCell id="e_ua_aa" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_ua" target="be_aa" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 资料分类管理 → 文件存储适配（跨层右下） -->
+        <mxCell id="e_fl_fs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="fe_fl" target="be_fs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 后端内部依赖（橙色） -->
+
+        <!-- 艺术家档案模块 → 艺术家认证（相邻，向左） -->
+        <mxCell id="e_arch_aa" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="be_arch" target="be_aa" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 资料文件模块 → 艺术家档案模块（相邻，向左） -->
+        <mxCell id="e_mf_arch" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="be_mf" target="be_arch" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 资料文件模块 → 文件存储适配（相邻，向右） -->
+        <mxCell id="e_mf_fs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" source="be_mf" target="be_fs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 图例 ===== -->
+        <mxCell id="legend_title" value="图例" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="337" width="40" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg1_box" value="" style="rounded=1;fillColor=#dce8fb;strokeColor=#7baaf7;" vertex="1" parent="1">
+          <mxGeometry x="80" y="339" width="18" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg1_txt" value="网站前端模块" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="102" y="335" width="85" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg2_box" value="" style="rounded=1;fillColor=#fff3cd;strokeColor=#ffb74d;" vertex="1" parent="1">
+          <mxGeometry x="200" y="339" width="18" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg2_txt" value="服务后端模块" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="222" y="335" width="85" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg3_box" value="" style="rounded=1;fillColor=#f5f5f5;strokeColor=#bdbdbd;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="339" width="18" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg3_txt" value="预留扩展模块" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="342" y="335" width="85" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg4_arrow" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#1565c0;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="346" as="sourcePoint"/>
+            <mxPoint x="472" y="346" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg4_txt" value="前端内依赖" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="480" y="335" width="75" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg5_arrow" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#e65100;strokeWidth=1.5;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="568" y="346" as="sourcePoint"/>
+            <mxPoint x="600" y="346" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg5_txt" value="跨层 / 后端依赖" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="608" y="335" width="100" height="22" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
