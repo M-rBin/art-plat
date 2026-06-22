@@ -5,6 +5,12 @@
 .aider
 .copilot
 .continue
+.windsurfrules
+CLAUDE.md
+DESIGN.md
+
+# 文档目录
+docs/
 
 # 依赖
 node_modules/
