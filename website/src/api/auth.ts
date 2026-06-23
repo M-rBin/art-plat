@@ -16,9 +16,7 @@ export interface LoginResult {
   user: AuthUser
 }
 
-export interface RegisterResult {
-  verifyUrl: string
-}
+export interface RegisterResult {}
 
 export async function login(email: string, password: string): Promise<ApiResponse<LoginResult | null>> {
   return request<LoginResult | null>('/api/auth/login', {

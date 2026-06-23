@@ -205,39 +205,58 @@
             <!-- Right Column (3/5) — Quote -->
             <div class="lg:col-span-3 flex h-full">
               <section
-                v-if="quoteEntries.length"
                 class="flex flex-col flex-1 w-full rounded-[12px] bg-[#F7F3EE] px-8 py-7 border border-[#EAE0D5]"
                 aria-label="问答引用"
               >
-                <div class="space-y-7">
-                  <div
-                    v-for="entry in quoteEntries"
-                    :key="entry.questionId"
-                    class="flex flex-col"
-                  >
-                    <!-- 问题标题 -->
-                    <div class="mb-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      <h2
-                        :id="`section-quote-${entry.questionId}`"
-                        class="text-[22px] font-bold text-[#1A1A1A] leading-[1.3]"
-                      >
-                        {{ entry.questionFr }}
-                      </h2>
-                      <span class="text-sm text-[#7F8C8D]">{{ entry.questionZh }}</span>
+                <template v-if="quoteEntries.length">
+                  <div class="space-y-7">
+                    <div
+                      v-for="entry in quoteEntries"
+                      :key="entry.questionId"
+                      class="flex flex-col"
+                    >
+                      <!-- 问题标题 -->
+                      <div class="mb-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <h2
+                          :id="`section-quote-${entry.questionId}`"
+                          class="text-[22px] font-bold text-[#1A1A1A] leading-[1.3]"
+                        >
+                          {{ entry.questionFr }}
+                        </h2>
+                        <span class="text-sm text-[#7F8C8D]">{{ entry.questionZh }}</span>
+                      </div>
+                      <div class="border-t border-[#E0D8CC] mb-5"></div>
+                      <!-- 引号 + 回答 -->
+                      <div class="text-[#D4A373] text-7xl font-serif leading-none mb-2 select-none" aria-hidden="true">&ldquo;</div>
+                      <div class="space-y-[1.1em]">
+                        <p
+                          v-for="(line, li) in entry.answer.split('\n').filter(l => l.trim())"
+                          :key="li"
+                          class="text-[15px] text-[#4A3728] leading-[2] indent-[2em]"
+                        >{{ line }}</p>
+                      </div>
+                      <div class="text-[#D4A373] text-7xl font-serif leading-none text-right select-none mt-2" aria-hidden="true">&rdquo;</div>
                     </div>
-                    <div class="border-t border-[#E0D8CC] mb-5"></div>
-                    <!-- 引号 + 回答 -->
-                    <div class="text-[#D4A373] text-7xl font-serif leading-none mb-2 select-none" aria-hidden="true">&ldquo;</div>
-                    <div class="space-y-[1.1em]">
-                      <p
-                        v-for="(line, li) in entry.answer.split('\n').filter(l => l.trim())"
-                        :key="li"
-                        class="text-[15px] text-[#4A3728] leading-[2] indent-[2em]"
-                      >{{ line }}</p>
-                    </div>
-                    <div class="text-[#D4A373] text-7xl font-serif leading-none text-right select-none mt-2" aria-hidden="true">&rdquo;</div>
                   </div>
-                </div>
+                </template>
+
+                <!-- 空状态占位 -->
+                <template v-else>
+                  <div class="mb-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <h2 class="text-[22px] font-bold text-[#1A1A1A] leading-[1.3]">
+                      {{ questions[0]?.contentFr ?? 'Pourquoi la Chine est-elle importante pour vous ?' }}
+                    </h2>
+                    <span class="text-sm text-[#7F8C8D]">{{ questions[0]?.contentZh ?? '为什么中国对您如此重要？' }}</span>
+                  </div>
+                  <div class="border-t border-[#E0D8CC] mb-5"></div>
+                  <div class="text-[#D4A373] text-7xl font-serif leading-none mb-2 select-none" aria-hidden="true">&ldquo;</div>
+                  <div class="flex-1 flex items-center">
+                    <p class="text-[15px] text-[#C8B89A] leading-[2] italic" aria-live="polite">
+                      Votre réponse apparaîtra ici après avoir rempli votre profil.
+                    </p>
+                  </div>
+                  <div class="text-[#D4A373] text-7xl font-serif leading-none text-right select-none mt-2" aria-hidden="true">&rdquo;</div>
+                </template>
               </section>
             </div>
 

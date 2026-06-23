@@ -45,7 +45,7 @@ export class ArtistAuthService {
   /**
    * 邮箱注册：限流 → 校验 → 哈希密码 → Redis 写 token → 发确认邮件
    */
-  async register(email: string, password: string, clientKey: string): Promise<{ verifyUrl: string }> {
+  async register(email: string, password: string, clientKey: string): Promise<object> {
     await this.assertRegisterRateLimit(clientKey);
 
     const normalizedEmail = email.trim().toLowerCase();
@@ -78,7 +78,7 @@ export class ArtistAuthService {
     await this.emailService.sendVerificationEmail(normalizedEmail, verifyUrl);
 
     this.logger.log(`注册确认 token 已生成: email=${normalizedEmail}`);
-    return { verifyUrl };
+    return {};
   }
 
   /**

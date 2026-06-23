@@ -115,16 +115,6 @@
               发送确认邮件，请点击邮件中的链接完成注册。
             </p>
 
-            <div v-if="isDev && safeVerifyUrl" class="rounded-[8px] border border-[#E0E0E0] bg-[#FAFAFA] px-4 py-3 text-left">
-              <p class="text-xs text-[#7F8C8D] mb-2">演示环境确认链接（Mock）</p>
-              <a
-                :href="safeVerifyUrl"
-                class="text-sm text-[#C0392B] break-all hover:underline underline-offset-2"
-              >
-                {{ safeVerifyUrl }}
-              </a>
-            </div>
-
             <router-link
               to="/login"
               class="inline-flex items-center justify-center w-full px-5 py-2.5 rounded-[8px] text-sm font-medium border border-[#E0E0E0] text-[#7F8C8D] hover:border-[#C0392B] hover:text-[#C0392B] transition-colors"
@@ -145,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import AuthHeader from '@/components/AuthHeader.vue'
 import { useAuthStore } from '@/stores/auth'
 
@@ -166,19 +156,6 @@ const fieldErrors = reactive({
 const errorMsg = ref('')
 const loading = ref(false)
 const registered = ref(false)
-const verifyUrl = ref('')
-const isDev = import.meta.env.DEV
-
-function sanitizeHttpUrl(url: string): string {
-  try {
-    const parsed = new URL(url, window.location.origin)
-    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : ''
-  } catch {
-    return ''
-  }
-}
-
-const safeVerifyUrl = computed(() => sanitizeHttpUrl(verifyUrl.value))
 
 function validate() {
   fieldErrors.email = ''
@@ -224,7 +201,6 @@ async function handleSubmit() {
   try {
     const result = await authStore.register(form.email, form.password)
     if (result.success) {
-      verifyUrl.value = result.verifyUrl
       registered.value = true
       return
     }

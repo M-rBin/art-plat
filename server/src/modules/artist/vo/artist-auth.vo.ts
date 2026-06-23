@@ -32,9 +32,6 @@ export class ArtistLoginResultVo {
 }
 
 /**
- * 注册成功响应
+ * 注册成功响应（verifyUrl 已移除，确认链接仅通过邮件发送）
  */
-export class ArtistRegisterResultVo {
-  @ApiProperty({ description: '邮箱确认链接（开发环境直接返回，生产环境仅邮件发送）' })
-  verifyUrl: string;
-}
+export class ArtistRegisterResultVo {}

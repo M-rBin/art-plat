@@ -35,7 +35,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const data = await authApi.register(email, password)
       if (data.code === 0 && data.data) {
-        return { success: true as const, verifyUrl: data.data.verifyUrl, message: data.message }
+        return { success: true as const, message: data.message }
       }
       return { success: false as const, message: data.message }
     } catch {
