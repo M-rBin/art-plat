@@ -77,10 +77,13 @@
         </p>
 
         <p v-if="isDev" class="mt-4 text-center text-xs text-[#7F8C8D]">
-          演示账号：demo@zhen.art / Zhen1234
+          Copyright (c) 2026. 巴黎臻藏. 版权所有。
         </p>
       </div>
     </div>
+    <footer class="py-4 text-center text-[11px] text-[#BEBEBE]">
+      Copyright &copy; 2026 巴黎臻藏 · ZHEN Collection Paris. 版权所有。
+    </footer>
   </div>
 </template>
 

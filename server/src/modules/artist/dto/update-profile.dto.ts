@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsOptional, IsString, MaxLength, IsArray,
-  ValidateNested, ArrayMaxSize,
+  ValidateNested, ArrayMaxSize, IsInt, IsNotEmpty, Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -113,6 +113,19 @@ export class GalleryItemDto {
   logoUrl?: string | null;
 }
 
+export class QuoteItemDto {
+  @ApiProperty({ description: '问题 ID' })
+  @IsInt()
+  @Min(1)
+  questionId: number;
+
+  @ApiProperty({ description: '回答内容' })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(2000)
+  answer: string;
+}
+
 /** 更新档案请求 DTO */
 export class UpdateProfileDto {
   @ApiPropertyOptional({ description: '艺术家姓名' })
@@ -157,11 +170,13 @@ export class UpdateProfileDto {
   @Type(() => ContactDto)
   contact?: ContactDto;
 
-  @ApiPropertyOptional({ description: '中国引言 [{fr, zh}]' })
+  @ApiPropertyOptional({ description: '问题回答列表 [{questionId, answer}]', type: [QuoteItemDto] })
   @IsOptional()
   @IsArray()
-  @ArrayMaxSize(8)
-  quoteParagraphs?: Array<{ fr?: string; zh?: string }>;
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => QuoteItemDto)
+  quoteParagraphs?: QuoteItemDto[];
 
   @ApiPropertyOptional({ description: '代理画廊列表', type: [GalleryItemDto] })
   @IsOptional()

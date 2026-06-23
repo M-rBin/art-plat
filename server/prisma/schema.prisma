@@ -635,3 +635,24 @@ model RecycleData {
   @@map("recycle_data")
 }
 
+// ==================== 艺术家问题库 ====================
+
+/// 艺术家问题库（由管理员维护）
+model ArtistQuestion {
+  id         Int      @id @default(autoincrement())
+  /// 问题（法文）
+  contentFr  String   @db.VarChar(500)
+  /// 问题（中文）
+  contentZh  String   @db.VarChar(500)
+  /// 排序号（升序）
+  sortOrder  Int      @default(0)
+  /// 状态 1=启用 0=禁用
+  status     Int      @default(1)
+  /// 创建时间
+  createTime DateTime @default(now())
+  /// 更新时间
+  updateTime DateTime @updatedAt
+
+  @@map("artist_questions")
+}
+

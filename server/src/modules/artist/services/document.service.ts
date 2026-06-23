@@ -150,7 +150,18 @@ export class DocumentService {
 
   /** 净化文件名，防止路径注入和 XSS */
   private sanitizeFileName(name: string): string {
-    return name.replace(/[/\\<>"'`]/g, '_').slice(0, 200);
+    // Multer 用 Latin-1 解析 multipart 文件名，UTF-8 中文会变成乱码
+    // 只在含非 ASCII 字节时尝试 re-decode，且结果含替换字符时回退原值
+    let decoded = name;
+    if (/[\x80-\xFF]/.test(name)) {
+      const candidate = Buffer.from(name, 'latin1').toString('utf8');
+      decoded = candidate.includes('�') ? name : candidate;
+    }
+    return decoded
+      .replace(/[/\\<>"'`]/g, '_')
+      .replace(/\.\./g, '_')
+      .replace(/\x00/g, '')
+      .slice(0, 200);
   }
 
   private async assertOwnership(userId: number, profileId: number): Promise<void> {

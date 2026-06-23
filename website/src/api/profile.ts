@@ -34,7 +34,7 @@ export interface ProfileData {
     email: string | null
     phone: string | null
   }
-  quoteParagraphs: Array<{ fr?: string; zh?: string }> | null
+  quoteParagraphs: Array<{ questionId: number; answer: string }> | null
   galleries: GalleryItem[]
 }
 

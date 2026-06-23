@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
+import { acceptHMRUpdate } from 'pinia'
 import { ref, computed, readonly } from 'vue'
 import * as authApi from '@/api/auth'
 import type { AuthUser } from '@/api/auth'
 
-// Token 仅保存在内存中；后端就绪后应迁移至 httpOnly Cookie 实现持久化登录
+// Token 仅保存在内存中；迁移至 httpOnly Cookie 后可实现跨页刷新持久化登录
 export const useAuthStore = defineStore('auth', () => {
   const _token = ref<string>('')
   const user = ref<AuthUser | null>(null)
@@ -53,8 +54,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // NOTE: 当前版本为占位；Token 仅存内存，页面刷新后 initAuth 无实际效果。
-  // 迁移至 httpOnly Cookie 后，此处应调用 /api/auth/me 恢复登录状态。
   async function initAuth() {
     if (!_token.value) return
 
@@ -72,3 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   return { token, user, isLoggedIn, login, register, logout, clearSession, initAuth }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+}

@@ -4,7 +4,7 @@
       <router-link to="/" class="flex items-baseline gap-4">
         <span class="text-[#1A1A1A] font-black text-[32px] tracking-[0.06em] leading-none">ZHEN</span>
         <span class="text-[#7F8C8D] text-[11px] tracking-widest uppercase whitespace-nowrap">Collection Paris</span>
-        <span class="text-[#1A1A1A] text-sm font-medium tracking-widest">巴黎 臻 藏</span>
+        <span class="text-[#1A1A1A] text-sm font-medium tracking-widest">巴 黎 臻 藏</span>
       </router-link>
       <slot />
     </div>

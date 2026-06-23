@@ -11,6 +11,7 @@
         </div>
         <div class="flex items-center gap-3">
           <button
+            type="button"
             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] text-sm text-[#7F8C8D] border border-[#E0E0E0] hover:border-[#C0392B] hover:text-[#C0392B] transition-colors"
             @click="handleCancel"
           >
@@ -20,6 +21,7 @@
             </span>
           </button>
           <button
+            type="button"
             class="inline-flex items-center gap-1.5 px-5 py-2 rounded-[8px] text-sm font-medium bg-[#C0392B] text-white hover:bg-[#a93226] transition-colors"
             :disabled="saving"
             @click="handleSave"
@@ -265,6 +267,35 @@
             </div>
           </section>
 
+          <!-- ── 回答问题 ────────────────────────────────────────────── -->
+          <section aria-labelledby="edit-quotes" class="border-t border-[#E0E0E0] pt-8">
+            <div class="mb-5 flex items-baseline gap-2 whitespace-nowrap">
+              <h2 id="edit-quotes" class="text-sm font-semibold text-[#1A1A1A]">Répondre aux questions</h2>
+              <span class="text-xs text-[#7F8C8D]">回答问题</span>
+            </div>
+
+            <div
+              v-if="form.quoteParagraphs.length"
+              class="rounded-[10px] border border-[#E0E0E0] p-4 space-y-3 bg-[#FAFAFA]"
+            >
+              <select
+                v-model="form.quoteParagraphs[0].questionId"
+                class="w-full px-3 py-2.5 rounded-[8px] border border-[#E0E0E0] text-sm text-[#1A1A1A] bg-white focus:outline-none focus:border-[#C0392B] transition-colors"
+              >
+                <option :value="0" disabled>请选择问题…</option>
+                <option v-for="q in questions" :key="q.id" :value="q.id">
+                  {{ q.contentFr }} / {{ q.contentZh }}
+                </option>
+              </select>
+              <textarea
+                v-model="form.quoteParagraphs[0].answer"
+                rows="5"
+                placeholder="请填写您的回答（不限语种，可留空）…"
+                class="w-full px-3 py-2.5 rounded-[8px] border border-[#E0E0E0] text-sm text-[#1A1A1A] bg-white placeholder-[#BEBEBE] focus:outline-none focus:border-[#C0392B] transition-colors resize-none"
+              />
+            </div>
+          </section>
+
           <!-- ── 资料上传 ────────────────────────────────────────────── -->
           <section aria-labelledby="edit-documents" class="border-t border-[#E0E0E0] pt-8">
             <div class="mb-2 flex items-baseline gap-2 whitespace-nowrap">
@@ -273,6 +304,14 @@
             </div>
             <p class="text-xs text-[#7F8C8D] mb-5">
               支持 PNG、JPG、JPEG、PDF，单个文件不超过 10MB
+            </p>
+
+            <p
+              v-if="saveSuccess"
+              class="mb-4 px-3 py-2 rounded-[8px] bg-green-50 text-sm text-green-700 border border-green-200"
+              role="status"
+            >
+              保存成功
             </p>
 
             <p
@@ -304,7 +343,12 @@
                   <li
                     v-for="file in form.documents[category.key]"
                     :key="file.id"
-                    class="flex items-center gap-3 px-3 py-2 rounded-[8px] bg-[#FAFAFA] border border-[#F0F0F0]"
+                    class="flex items-center gap-3 px-3 py-2 rounded-[8px] bg-[#FAFAFA] border border-[#F0F0F0] cursor-pointer hover:border-[#C0392B]/30 transition-colors"
+                    role="button"
+                    tabindex="0"
+                    :aria-label="`预览 ${file.name}`"
+                    @click="openPreview(file)"
+                    @keydown.enter="openPreview(file)"
                   >
                     <div
                       class="w-8 h-8 rounded-[6px] flex items-center justify-center shrink-0"
@@ -334,7 +378,7 @@
                       type="button"
                       class="text-xs text-[#7F8C8D] hover:text-[#C0392B] transition-colors shrink-0"
                       :aria-label="`Supprimer ${file.name}`"
-                      @click="removeFile(category.key, file.id)"
+                      @click.stop="removeFile(category.key, file.id)"
                     >
                       <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
                         <span>Supprimer</span>
@@ -373,6 +417,7 @@
           <!-- 底部操作 -->
           <div class="border-t border-[#E0E0E0] pt-8 pb-4 flex gap-3 justify-end">
             <button
+              type="button"
               class="px-6 py-2.5 rounded-[8px] text-sm text-[#7F8C8D] border border-[#E0E0E0] hover:border-[#C0392B] hover:text-[#C0392B] transition-colors"
               @click="handleCancel"
             >
@@ -382,6 +427,7 @@
               </span>
             </button>
             <button
+              type="button"
               class="px-6 py-2.5 rounded-[8px] text-sm font-medium bg-[#C0392B] text-white hover:bg-[#a93226] transition-colors disabled:opacity-50"
               :disabled="saving"
               @click="handleSave"
@@ -400,16 +446,74 @@
         </div>
       </main>
     </div>
+    <footer class="py-4 text-center text-[11px] text-[#BEBEBE]">
+      Copyright &copy; 2026 巴黎臻藏 · ZHEN Collection Paris. 版权所有。
+    </footer>
+
+    <!-- ── 文件预览 Dialog ─────────────────────────────────────────────── -->
+    <Teleport to="body">
+      <div
+        ref="dialogRef"
+        v-if="previewFile"
+        tabindex="-1"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 outline-none"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="`预览 ${previewFile.name}`"
+        @click.self="closePreview"
+        @keydown.esc="closePreview"
+      >
+        <div class="relative max-w-[90vw] max-h-[90vh] bg-white rounded-[12px] overflow-hidden shadow-2xl flex flex-col">
+          <!-- 顶部标题栏 -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-[#E0E0E0] shrink-0">
+            <p class="text-sm text-[#1A1A1A] font-medium truncate max-w-[60vw]">{{ previewFile.name }}</p>
+            <button
+              type="button"
+              class="ml-4 w-7 h-7 rounded-[6px] flex items-center justify-center text-[#7F8C8D] hover:text-[#1A1A1A] hover:bg-[#F5F5F5] transition-colors shrink-0"
+              aria-label="关闭预览"
+              @click="closePreview"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <!-- 内容区 -->
+          <div class="flex-1 overflow-auto flex items-center justify-center p-4">
+            <img
+              v-if="previewFile.type !== 'application/pdf'"
+              :src="previewFile.url"
+              :alt="previewFile.name"
+              class="max-w-full max-h-[75vh] object-contain rounded-[4px]"
+              loading="eager"
+            />
+            <div v-else class="flex flex-col items-center gap-3 py-8 px-12 text-center">
+              <svg class="w-12 h-12 text-[#7F8C8D]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+              </svg>
+              <p class="text-sm text-[#1A1A1A] font-medium">{{ previewFile.name }}</p>
+              <a
+                :href="previewFile.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-[#C0392B] hover:underline underline-offset-2"
+              >在新标签页打开 PDF</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { getProfile, updateProfile, uploadAvatar } from '@/api/profile'
 import { listDocuments, uploadDocument, deleteDocument } from '@/api/documents'
-import type { DocumentItem } from '@/api/documents'
+import { listQuestions } from '@/api/questions'
+import type { QuestionItem } from '@/api/questions'
 import {
   profileNavItems, documentCategories, isAllowedFile, formatFileSize,
   getGalleryInitials, MAX_FILE_SIZE,
@@ -419,17 +523,34 @@ import {
 const router = useRouter()
 const authStore = useAuthStore()
 const saving = ref(false)
+const saveSuccess = ref(false)
+let successTimer: ReturnType<typeof setTimeout> | null = null
 const uploadError = ref('')
 const profileId = ref<number | null>(null)
 const avatarInputRef = ref<HTMLInputElement | null>(null)
 const avatarUploading = ref(false)
 const avatarError = ref('')
+const questions = ref<QuestionItem[]>([])
+
+// ── 文件预览 ──────────────────────────────────────────────────────────────
+const previewFile = ref<{ name: string; type: string; url: string } | null>(null)
+const dialogRef = ref<HTMLElement | null>(null)
+
+async function openPreview(file: { name: string; type: string; url: string }) {
+  previewFile.value = file
+  await nextTick()
+  dialogRef.value?.focus()
+}
+function closePreview() {
+  previewFile.value = null
+}
 
 interface UploadedFile {
   id: string
   name: string
   size: number
   type: string
+  url: string
 }
 
 type DocumentFiles = Record<DocumentCategoryKey, UploadedFile[]>
@@ -501,6 +622,7 @@ const form = reactive({
     phone:       '',
   } as Record<string, string>,
   galleries: [] as Array<{ name: string; location: string; logo: string }>,
+  quoteParagraphs: [] as Array<{ questionId: number; answer: string }>,
   documents: {
     portrait: [],
     studio: [],
@@ -511,6 +633,15 @@ const form = reactive({
 })
 
 onMounted(async () => {
+  const questionsRes = await listQuestions()
+  if (questionsRes.code === 0 && questionsRes.data) {
+    questions.value = questionsRes.data
+  }
+  // 无论问题列表是否加载成功，都保证表单有一条初始条目可见
+  if (form.quoteParagraphs.length === 0) {
+    form.quoteParagraphs = [{ questionId: questions.value[0]?.id ?? 0, answer: '' }]
+  }
+
   if (!authStore.token) return
   const res = await getProfile(authStore.token)
   if (res.code === 0 && res.data) {
@@ -541,6 +672,14 @@ onMounted(async () => {
       logo: '',
     }))
 
+    // 兼容性加载：只加载新格式 {questionId, answer}，旧格式 {fr, zh} 忽略；只取第一条
+    if (Array.isArray(p.quoteParagraphs)) {
+      const loaded = (p.quoteParagraphs as Array<Record<string, unknown>>)
+        .filter((q) => typeof q.questionId === 'number' && typeof q.answer === 'string')
+        .map((q) => ({ questionId: q.questionId as number, answer: q.answer as string }))
+      form.quoteParagraphs = loaded.length ? [loaded[0]] : [{ questionId: questions.value[0]?.id ?? 0, answer: '' }]
+    }
+
     if (profileId.value) {
       const docRes = await listDocuments(authStore.token, profileId.value)
       if (docRes.code === 0 && docRes.data) {
@@ -552,12 +691,17 @@ onMounted(async () => {
               name: doc.fileName,
               size: doc.fileSize,
               type: doc.mimeType,
+              url: doc.url,
             })
           }
         }
       }
     }
   }
+})
+
+onUnmounted(() => {
+  if (successTimer) clearTimeout(successTimer)
 })
 
 async function handleAvatarSelect(event: Event) {
@@ -614,6 +758,11 @@ async function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) 
     return
   }
 
+  const token = authStore.token
+  const pid = profileId.value
+
+  const newItems: UploadedFile[] = []
+
   for (const file of Array.from(files)) {
     if (!isAllowedFile(file)) {
       uploadError.value = `「${file.name}」格式不支持，仅支持 PNG、JPG、JPEG、PDF`
@@ -624,19 +773,28 @@ async function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) 
       continue
     }
     try {
-      const res = await uploadDocument(authStore.token, profileId.value, categoryKey, file)
+      const res = await uploadDocument(token, pid, categoryKey, file)
       if (res.code === 0 && res.data) {
-        form.documents[categoryKey].push({
+        newItems.push({
           id: String(res.data.id),
           name: res.data.fileName,
           size: res.data.fileSize,
           type: res.data.mimeType,
+          url: res.data.url,
         })
       } else {
         uploadError.value = res.message || '上传失败'
       }
     } catch {
       uploadError.value = `「${file.name}」上传失败，请稍后重试`
+    }
+  }
+
+  if (newItems.length) {
+    const target = form.documents[categoryKey]
+    if (Array.isArray(target)) {
+      target.push(...newItems)
+      await nextTick()
     }
   }
 
@@ -703,9 +861,15 @@ async function handleSave() {
         location: g.location || null,
         logoUrl: null,
       })),
+      quoteParagraphs: form.quoteParagraphs.filter((q) => q.questionId > 0 && q.answer.trim() !== ''),
     })
     if (res.code === 0) {
-      router.push('/profile')
+      if (successTimer) clearTimeout(successTimer)
+      saveSuccess.value = true
+      successTimer = setTimeout(() => {
+        saveSuccess.value = false
+        router.push('/profile')
+      }, 0)
     } else {
       uploadError.value = res.message || '保存失败'
     }

@@ -8,7 +8,7 @@
         <div class="flex items-baseline gap-4">
           <span class="text-[#1A1A1A] font-black text-[32px] tracking-[0.06em] leading-none">ZHEN</span>
           <span class="text-[#7F8C8D] text-[11px] tracking-widest uppercase whitespace-nowrap">Collection Paris</span>
-          <span class="text-[#1A1A1A] text-sm font-medium tracking-widest">巴黎 臻 藏</span>
+          <span class="text-[#1A1A1A] text-sm font-medium tracking-widest">巴 黎 臻 藏</span>
         </div>
         <button
           class="inline-flex items-center gap-1.5 text-sm text-[#7F8C8D] hover:text-[#C0392B] transition-colors"
@@ -204,35 +204,40 @@
 
             <!-- Right Column (3/5) — Quote -->
             <div class="lg:col-span-3 flex h-full">
-              <section class="flex flex-col flex-1 w-full rounded-[12px] bg-[#F7F3EE] px-8 py-7 border border-[#EAE0D5]" aria-labelledby="section-quote">
-                <div class="mb-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <h2 id="section-quote" class="text-[22px] font-bold text-[#1A1A1A] leading-[1.3]">
-                    Pourquoi la Chine est-elle importante pour vous ?
-                  </h2>
-                  <span class="text-sm text-[#7F8C8D]">为什么中国对您如此重要？</span>
-                </div>
-                <div class="border-t border-[#E0D8CC] mb-5"></div>
-                <div class="text-[#D4A373] text-7xl font-serif leading-none mb-2 select-none" aria-hidden="true">&ldquo;</div>
-                <div class="space-y-4">
-                  <p
-                    v-for="(para, i) in quoteParagraphs"
-                    :key="`fr-${i}`"
-                    class="text-sm text-[#4A3728] leading-[1.9]"
+              <section
+                v-if="quoteEntries.length"
+                class="flex flex-col flex-1 w-full rounded-[12px] bg-[#F7F3EE] px-8 py-7 border border-[#EAE0D5]"
+                aria-label="问答引用"
+              >
+                <div class="space-y-7">
+                  <div
+                    v-for="entry in quoteEntries"
+                    :key="entry.questionId"
+                    class="flex flex-col"
                   >
-                    {{ para.fr }}
-                  </p>
+                    <!-- 问题标题 -->
+                    <div class="mb-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <h2
+                        :id="`section-quote-${entry.questionId}`"
+                        class="text-[22px] font-bold text-[#1A1A1A] leading-[1.3]"
+                      >
+                        {{ entry.questionFr }}
+                      </h2>
+                      <span class="text-sm text-[#7F8C8D]">{{ entry.questionZh }}</span>
+                    </div>
+                    <div class="border-t border-[#E0D8CC] mb-5"></div>
+                    <!-- 引号 + 回答 -->
+                    <div class="text-[#D4A373] text-7xl font-serif leading-none mb-2 select-none" aria-hidden="true">&ldquo;</div>
+                    <div class="space-y-[1.1em]">
+                      <p
+                        v-for="(line, li) in entry.answer.split('\n').filter(l => l.trim())"
+                        :key="li"
+                        class="text-[15px] text-[#4A3728] leading-[2] indent-[2em]"
+                      >{{ line }}</p>
+                    </div>
+                    <div class="text-[#D4A373] text-7xl font-serif leading-none text-right select-none mt-2" aria-hidden="true">&rdquo;</div>
+                  </div>
                 </div>
-                <div class="space-y-4 mt-6 pt-6 border-t border-[#E0D8CC]/60">
-                  <p
-                    v-for="(para, i) in quoteParagraphs"
-                    :key="`zh-${i}`"
-                    class="text-sm text-[#7F8C8D] leading-[1.9]"
-                  >
-                    {{ para.zh }}
-                  </p>
-                </div>
-                <div class="flex-1 min-h-4" aria-hidden="true"></div>
-                <div class="text-[#D4A373] text-7xl font-serif leading-none text-right select-none" aria-hidden="true">&rdquo;</div>
               </section>
             </div>
 
@@ -245,86 +250,233 @@
               <span class="text-xs text-[#7F8C8D]">已上传资料</span>
             </div>
             <div class="rounded-[12px] border border-[#E0E0E0] overflow-hidden">
-              <ul class="divide-y divide-[#F5F5F5]" role="list">
-                <li
-                  v-for="doc in documents"
-                  :key="doc.nameFr"
-                  class="grid grid-cols-[240px_minmax(0,1fr)_auto] gap-x-8 items-center px-5 py-3.5"
-                >
+              <template v-for="meta in DOC_META" :key="meta.key">
+                <!-- 分类行 -->
+                <div class="grid grid-cols-[240px_minmax(0,1fr)_auto] gap-x-8 items-center px-5 py-3.5 border-b border-[#F5F5F5] last:border-b-0">
                   <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0" :class="doc.iconBg">
-                      <svg class="w-4 h-4" :class="doc.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="doc.iconPath" />
+                    <div class="w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0" :class="meta.iconBg">
+                      <svg class="w-4 h-4" :class="meta.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="meta.iconPath" />
                       </svg>
                     </div>
                     <div class="flex items-baseline gap-2 whitespace-nowrap text-left min-w-0">
-                      <p class="text-sm text-[#1A1A1A] font-medium">{{ doc.nameFr }}</p>
-                      <p class="text-xs text-[#7F8C8D]">{{ doc.nameZh }}</p>
+                      <p class="text-sm text-[#1A1A1A] font-medium">{{ meta.nameFr }}</p>
+                      <p class="text-xs text-[#7F8C8D]">{{ meta.nameZh }}</p>
                     </div>
                   </div>
-                  <p class="text-xs font-normal text-[#7F8C8D] text-left">{{ doc.count }}</p>
+                  <p class="text-xs font-normal text-[#7F8C8D] text-left">{{ docCountLabel(meta.key) }}</p>
                   <div class="flex gap-2 shrink-0">
-                    <button :aria-label="`Voir ${doc.nameFr}`" class="text-sm text-[#7F8C8D] hover:text-[#1A1A1A] transition-colors" type="button">
+                    <button
+                      v-if="docFiles[meta.key].length"
+                      type="button"
+                      :aria-label="`Voir ${meta.nameFr}`"
+                      :aria-expanded="expandedDoc === meta.key"
+                      class="text-sm transition-colors"
+                      :class="expandedDoc === meta.key ? 'text-[#C0392B]' : 'text-[#7F8C8D] hover:text-[#1A1A1A]'"
+                      @click="toggleDocExpand(meta.key)"
+                    >
                       <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
-                        <span>Voir</span>
-                        <span class="text-xs opacity-70">查看</span>
-                      </span>
-                    </button>
-                    <button :aria-label="`Modifier ${doc.nameFr}`" class="text-sm text-[#7F8C8D] hover:text-[#1A1A1A] transition-colors" type="button">
-                      <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
-                        <span>Modifier</span>
-                        <span class="text-xs opacity-70">编辑</span>
+                        <span>{{ expandedDoc === meta.key ? 'Masquer' : 'Voir' }}</span>
+                        <span class="text-xs opacity-70">{{ expandedDoc === meta.key ? '收起' : '查看' }}</span>
                       </span>
                     </button>
                   </div>
-                </li>
-              </ul>
-              <div class="px-5 py-4 border-t border-[#E0E0E0]">
-                <button
-                  type="button"
-                  class="w-full border-2 border-dashed border-[#E0E0E0] rounded-[8px] py-4 flex items-center justify-center gap-2 text-[#7F8C8D] hover:border-[#C0392B]/40 hover:text-[#C0392B] transition-colors"
-                  @click="handleUpload"
+                </div>
+
+                <!-- 展开的文件明细 -->
+                <ul
+                  v-if="expandedDoc === meta.key"
+                  class="divide-y divide-[#F9F9F9] bg-[#FAFAFA] border-b border-[#F0F0F0]"
+                  role="list"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                  </svg>
-                  <span class="text-sm font-medium inline-flex items-baseline gap-1.5 whitespace-nowrap">
-                    <span>+ Déposer un document</span>
-                    <span class="text-xs opacity-70">上传资料</span>
-                  </span>
-                </button>
-                <p class="text-center text-[11px] text-[#7F8C8D] mt-2">支持 JPG / PNG / PDF / MP4 等格式，单个文件不超过 200MB</p>
-              </div>
+                  <li
+                    v-for="file in docFiles[meta.key]"
+                    :key="file.id"
+                    class="flex items-center gap-3 px-8 py-2.5 cursor-pointer hover:bg-[#F5F5F5] transition-colors"
+                    role="button"
+                    tabindex="0"
+                    :aria-label="`预览 ${file.fileName}`"
+                    @click="openDocPreview(file)"
+                    @keydown.enter="openDocPreview(file)"
+                  >
+                    <div
+                      class="w-7 h-7 rounded-[5px] flex items-center justify-center shrink-0"
+                      :class="file.mimeType === 'application/pdf' ? 'bg-[#F5F5F5]' : 'bg-[#F5F0E8]'"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5"
+                        :class="file.mimeType === 'application/pdf' ? 'text-[#7F8C8D]' : 'text-[#D4A373]'"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                          :d="file.mimeType === 'application/pdf'
+                            ? 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
+                            : 'M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z'"
+                        />
+                      </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs text-[#1A1A1A] truncate">{{ file.fileName }}</p>
+                    </div>
+                    <button
+                      type="button"
+                      class="text-xs text-[#7F8C8D] hover:text-[#C0392B] transition-colors shrink-0 px-2 py-1"
+                      :aria-label="`删除 ${file.fileName}`"
+                      @click.stop="removeDocFile(file)"
+                    >
+                      <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
+                        <span>Supprimer</span>
+                        <span class="opacity-70">删除</span>
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </template>
             </div>
           </section>
+
+          <!-- ── 预览 Dialog ──────────────────────────────────────────────── -->
+          <Teleport to="body">
+            <div
+              v-if="previewDoc"
+              ref="previewDialogRef"
+              tabindex="-1"
+              class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 outline-none"
+              role="dialog"
+              aria-modal="true"
+              :aria-label="`预览 ${previewDoc.fileName}`"
+              @click.self="closeDocPreview"
+              @keydown.esc="closeDocPreview"
+            >
+              <div class="relative max-w-[90vw] max-h-[90vh] bg-white rounded-[12px] overflow-hidden shadow-2xl flex flex-col">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-[#E0E0E0] shrink-0">
+                  <p class="text-sm text-[#1A1A1A] font-medium truncate max-w-[60vw]">{{ previewDoc.fileName }}</p>
+                  <button
+                    type="button"
+                    class="ml-4 w-7 h-7 rounded-[6px] flex items-center justify-center text-[#7F8C8D] hover:text-[#1A1A1A] hover:bg-[#F5F5F5] transition-colors shrink-0"
+                    aria-label="关闭预览"
+                    @click="closeDocPreview"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex-1 overflow-auto flex items-center justify-center p-4">
+                  <img
+                    v-if="previewDoc.mimeType !== 'application/pdf'"
+                    :src="previewDoc.url"
+                    :alt="previewDoc.fileName"
+                    class="max-w-full max-h-[75vh] object-contain rounded-[4px]"
+                    loading="eager"
+                  />
+                  <div v-else class="flex flex-col items-center gap-3 py-8 px-12 text-center">
+                    <svg class="w-12 h-12 text-[#7F8C8D]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                    <p class="text-sm text-[#1A1A1A] font-medium">{{ previewDoc.fileName }}</p>
+                    <a
+                      :href="previewDoc.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-sm text-[#C0392B] hover:underline underline-offset-2"
+                    >在新标签页打开 PDF</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Teleport>
 
         </div>
       </main>
 
     </div>
+    <footer class="py-4 text-center text-[11px] text-[#BEBEBE]">
+      Copyright &copy; 2026 巴黎臻藏 · ZHEN Collection Paris. 版权所有。
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { getProfile } from '@/api/profile'
+import { listQuestions } from '@/api/questions'
+import { listDocuments, deleteDocument } from '@/api/documents'
 import type { ProfileData } from '@/api/profile'
+import type { QuestionItem } from '@/api/questions'
+import type { DocumentItem } from '@/api/documents'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 const profile = ref<ProfileData | null>(null)
 const loading = ref(true)
+const questions = ref<QuestionItem[]>([])
+
+// 文件数据：category key → 文件列表
+type DocCategoryKey = 'portrait' | 'studio' | 'cv' | 'portfolio' | 'media'
+const docFiles = ref<Record<DocCategoryKey, DocumentItem[]>>({
+  portrait: [], studio: [], cv: [], portfolio: [], media: [],
+})
+// 展开状态
+const expandedDoc = ref<DocCategoryKey | null>(null)
+// 预览
+const previewDoc = ref<DocumentItem | null>(null)
+
+const previewDialogRef = ref<HTMLElement | null>(null)
+
+function toggleDocExpand(key: DocCategoryKey) {
+  expandedDoc.value = expandedDoc.value === key ? null : key
+}
+
+async function openDocPreview(doc: DocumentItem) {
+  previewDoc.value = doc
+  await nextTick()
+  previewDialogRef.value?.focus()
+}
+
+function closeDocPreview() {
+  previewDoc.value = null
+}
+
+async function removeDocFile(doc: DocumentItem) {
+  if (!authStore.token) return
+  try {
+    const res = await deleteDocument(authStore.token, doc.id)
+    if (res.code === 0) {
+      const key = doc.category as DocCategoryKey
+      if (docFiles.value[key]) {
+        docFiles.value[key] = docFiles.value[key].filter((f) => f.id !== doc.id)
+      }
+    }
+  } catch {
+    // 网络异常时静默忽略，不影响界面状态
+  }
+}
 
 onMounted(async () => {
+  const questionsRes = await listQuestions()
+  if (questionsRes.code === 0 && questionsRes.data) {
+    questions.value = questionsRes.data
+  }
+
   if (!authStore.token) return
   try {
     const res = await getProfile(authStore.token)
     if (res.code === 0 && res.data) {
       profile.value = res.data
+      // 加载文件列表
+      if (res.data.id) {
+        const docRes = await listDocuments(authStore.token, res.data.id)
+        if (docRes.code === 0 && docRes.data) {
+          for (const doc of docRes.data) {
+            const key = doc.category as DocCategoryKey
+            if (docFiles.value[key]) docFiles.value[key].push(doc)
+          }
+        }
+      }
     }
   } finally {
     loading.value = false
@@ -338,10 +490,6 @@ async function handleLogout() {
 
 function handleEditProfile() {
   router.push('/profile/edit')
-}
-
-function handleUpload() {
-  // 文件上传占位
 }
 
 function getGalleryInitials(name: string): string {
@@ -517,58 +665,67 @@ const galleries = computed(() =>
 )
 
 // ── Quote Paragraphs ──────────────────────────────────────────────────────
-const quoteParagraphs = computed(() => profile.value?.quoteParagraphs || [])
+interface QuoteEntry { questionId: number; answer: string; questionFr: string; questionZh: string }
+
+const quoteEntries = computed<QuoteEntry[]>(() => {
+  const raw = profile.value?.quoteParagraphs
+  if (!Array.isArray(raw) || raw.length === 0) return []
+  const qMap = new Map(questions.value.map((q) => [q.id, q]))
+  return (raw as Array<{ questionId: number; answer: string }>)
+    .filter((q) => q.questionId > 0 && q.answer?.trim())
+    .map((q) => {
+      const found = qMap.get(q.questionId)
+      if (!found) return null
+      return { questionId: q.questionId, answer: q.answer, questionFr: found.contentFr, questionZh: found.contentZh }
+    })
+    .filter((e): e is QuoteEntry => e !== null)
+})
 
 // ── Documents ─────────────────────────────────────────────────────────────
-interface DocItem {
+interface DocMeta {
+  key: DocCategoryKey
   nameFr: string
   nameZh: string
-  count: string
   iconPath: string
   iconBg: string
   iconColor: string
 }
 
-const documents: DocItem[] = [
+const DOC_META: DocMeta[] = [
   {
-    nameFr: 'Photos portrait',
-    nameZh: '肖像照片',
-    count: '5 个文件',
+    key: 'portrait', nameFr: 'Photos portrait', nameZh: '肖像照片',
     iconPath: 'M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z',
-    iconBg: 'bg-[#F5F0E8]',
-    iconColor: 'text-[#D4A373]',
+    iconBg: 'bg-[#F5F0E8]', iconColor: 'text-[#D4A373]',
   },
   {
-    nameFr: 'Photos atelier',
-    nameZh: '工作室照片',
-    count: '12 个文件',
+    key: 'studio', nameFr: 'Photos atelier', nameZh: '工作室照片',
     iconPath: 'M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z',
-    iconBg: 'bg-[#F5F0E8]',
-    iconColor: 'text-[#D4A373]',
+    iconBg: 'bg-[#F5F0E8]', iconColor: 'text-[#D4A373]',
   },
   {
-    nameFr: 'CV',
-    nameZh: '个人简历',
-    count: '1 个文件（PDF）',
+    key: 'cv', nameFr: 'CV', nameZh: '个人简历',
     iconPath: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z',
-    iconBg: 'bg-[#F5F5F5]',
-    iconColor: 'text-[#7F8C8D]',
+    iconBg: 'bg-[#F5F5F5]', iconColor: 'text-[#7F8C8D]',
   },
   {
-    nameFr: 'Portfolio',
-    nameZh: '作品集',
-    count: '3 个文件',
+    key: 'portfolio', nameFr: 'Portfolio', nameZh: '作品集',
     iconPath: 'M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25',
-    iconBg: 'bg-[#F5F5F5]',
-    iconColor: 'text-[#7F8C8D]',
+    iconBg: 'bg-[#F5F5F5]', iconColor: 'text-[#7F8C8D]',
   },
   {
-    nameFr: 'Couverture média',
-    nameZh: '媒体报道',
-    count: '6 个文件',
+    key: 'media', nameFr: 'Couverture média', nameZh: '媒体报道',
     iconPath: 'M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z',
-    iconBg: 'bg-[#F5F5F5]',
-    iconColor: 'text-[#7F8C8D]',
+    iconBg: 'bg-[#F5F5F5]', iconColor: 'text-[#7F8C8D]',
   },
 ]
+
+function docCountLabel(key: DocCategoryKey): string {
+  const files = docFiles.value[key]
+  const n = files.length
+  if (n === 0) return '0 个文件'
+  const hasPdf = files.some((f) => f.mimeType === 'application/pdf')
+  return hasPdf && files.every((f) => f.mimeType === 'application/pdf')
+    ? `${n} 个文件（PDF）`
+    : `${n} 个文件`
+}
 </script>

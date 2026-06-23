@@ -27,6 +27,9 @@ export default defineConfig({
     },
   },
   server: {
+    watch: {
+      ignored: ['**/node_modules/**', '**/.git/**', '**/server/uploads/**', '**/server/dist/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:9001',

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '@/common/prisma.service';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
 
@@ -101,7 +102,9 @@ export class ProfileService {
             wechat: data.contact?.wechat,
             contactEmail: data.contact?.email,
             phone: data.contact?.phone,
-            quoteParagraphs: data.quoteParagraphs ?? undefined,
+            quoteParagraphs: data.quoteParagraphs != null
+              ? (data.quoteParagraphs as unknown as Prisma.InputJsonValue)
+              : undefined,
           },
         });
 

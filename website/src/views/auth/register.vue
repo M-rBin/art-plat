@@ -138,6 +138,9 @@
         </template>
       </div>
     </div>
+    <footer class="py-4 text-center text-[11px] text-[#BEBEBE]">
+      Copyright &copy; 2026 巴黎臻藏 · ZHEN Collection Paris. 版权所有。
+    </footer>
   </div>
 </template>
 

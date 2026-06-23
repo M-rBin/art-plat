@@ -100,13 +100,13 @@ export class AuthGuard implements CanActivate {
   }
 
   /**
-   * 判断是否为 C 端 artist 路由（/api/auth、/api/profile、/api/documents）。
+   * 判断是否为 C 端 artist 路由（/api/auth、/api/profile、/api/documents、/api/questions）。
    * 这些路径由 ArtistAuthGuard 独立负责认证，全局 AuthGuard 放行。
    * 注意：新增 C 端控制器时，需同步在此正则中添加对应路径前缀。
    */
   private isArtistRoute(request: any): boolean {
     const fullPath = (request.url || '').split('?')[0];
-    return /^\/api\/(auth|profile|documents)(\/|$)/.test(fullPath);
+    return /^\/api\/(auth|profile|documents|questions)(\/|$)/.test(fullPath);
   }
 
   /**
