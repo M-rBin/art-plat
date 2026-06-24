@@ -83,6 +83,72 @@ mockRoute('DELETE', '/admin/sys/position/delete/:id', ({ url }) => {
   return {}
 })
 
+// ==================== 艺术家管理：问题库 / 艺术家账号 ====================
+import {
+  getQuestionListMock,
+  addQuestionMock,
+  updateQuestionMock,
+  updateQuestionStatusMock,
+  deleteQuestionMock,
+  getArtistAccountListMock,
+  updateArtistAccountStatusMock,
+  resetArtistPasswordMock,
+  getAdminArtistProfileMock,
+  updateAdminArtistProfileMock,
+  getAdminArtistDocumentsMock,
+  deleteAdminArtistDocumentMock,
+} from './artist'
+
+// 问题库
+mockRoute('GET', '/admin/artist/questions', ({ params }) => getQuestionListMock(params))
+mockRoute('POST', '/admin/artist/questions', ({ data }) => addQuestionMock(data))
+mockRoute('PUT', '/admin/artist/questions/:id', ({ url, data }) => updateQuestionMock(extractId(url), data))
+mockRoute('PUT', '/admin/artist/questions/:id/status', ({ url, data }) => {
+  const parts = url.split('/')
+  const id = Number(parts[parts.length - 2])
+  return updateQuestionStatusMock(id, data?.status)
+})
+mockRoute('DELETE', '/admin/artist/questions/:id', ({ url }) => {
+  deleteQuestionMock(extractId(url))
+  return {}
+})
+
+// 艺术家账号
+mockRoute('GET', '/admin/artist/accounts', ({ params }) => getArtistAccountListMock(params))
+mockRoute('PUT', '/admin/artist/accounts/:id/status', ({ url, data }) => {
+  const parts = url.split('/')
+  const id = Number(parts[parts.length - 2])
+  return updateArtistAccountStatusMock(id, data?.status)
+})
+mockRoute('POST', '/admin/artist/accounts/:id/reset-password', ({ url }) => {
+  const parts = url.split('/')
+  const id = Number(parts[parts.length - 2])
+  return resetArtistPasswordMock(id)
+})
+
+// 艺术家档案（管理端）
+mockRoute('GET', '/admin/artist/accounts/:id/profile', ({ url }) => {
+  const parts = url.split('/')
+  const id = Number(parts[parts.length - 2])
+  return getAdminArtistProfileMock(id)
+})
+mockRoute('PUT', '/admin/artist/accounts/:id/profile', ({ url, data }) => {
+  const parts = url.split('/')
+  const id = Number(parts[parts.length - 2])
+  return updateAdminArtistProfileMock(id, data)
+})
+
+// 艺术家文件（管理端）
+mockRoute('GET', '/admin/artist/accounts/:id/documents', ({ url, params }) => {
+  const parts = url.split('?')[0].split('/')
+  const id = Number(parts[parts.length - 2])
+  return getAdminArtistDocumentsMock(id, params?.category)
+})
+mockRoute('DELETE', '/admin/artist/documents/:id', ({ url }) => {
+  deleteAdminArtistDocumentMock(extractId(url))
+  return {}
+})
+
 // ==================== 权限管理：角色 / 菜单 ====================
 import {
   getRoleListMock,

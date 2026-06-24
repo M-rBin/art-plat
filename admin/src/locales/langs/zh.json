@@ -233,6 +233,13 @@
       "title": "权限管理",
       "role": "角色管理",
       "menu": "菜单管理"
+    },
+    "artist": {
+      "title": "艺术家管理",
+      "questions": "问题库管理",
+      "accounts": "艺术家账号",
+      "profile": "艺术家档案",
+      "documents": "资料文件管理"
     }
   },
   "table": {

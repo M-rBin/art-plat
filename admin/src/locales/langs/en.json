@@ -233,6 +233,13 @@
       "title": "Permission",
       "role": "Role Management",
       "menu": "Menu Management"
+    },
+    "artist": {
+      "title": "Artist Management",
+      "questions": "Question Bank",
+      "accounts": "Artist Accounts",
+      "profile": "Artist Profile",
+      "documents": "Artist Documents"
     }
   },
   "table": {

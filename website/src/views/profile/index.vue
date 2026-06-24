@@ -341,7 +341,7 @@
                       type="button"
                       class="text-xs text-[#7F8C8D] hover:text-[#C0392B] transition-colors shrink-0 px-2 py-1"
                       :aria-label="`删除 ${file.fileName}`"
-                      @click.stop="removeDocFile(file)"
+                      @click.stop="requestDeleteDoc(file)"
                     >
                       <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
                         <span>Supprimer</span>
@@ -353,6 +353,48 @@
               </template>
             </div>
           </section>
+
+          <!-- ── 删除确认 Dialog ──────────────────────────────────────────── -->
+          <Teleport to="body">
+            <div
+              v-if="confirmDeleteDoc"
+              ref="confirmDialogRef"
+              tabindex="-1"
+              class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 outline-none"
+              role="dialog"
+              aria-modal="true"
+              aria-label="确认删除"
+              @keydown.esc="cancelDeleteDoc"
+              @click.self="cancelDeleteDoc"
+            >
+              <div class="bg-white rounded-[12px] shadow-xl px-8 py-7 max-w-[380px] w-full mx-4">
+                <p class="text-sm font-semibold text-[#1A1A1A] mb-1">确认删除？</p>
+                <p class="text-sm text-[#7F8C8D] mb-6 break-all">{{ confirmDeleteDoc.fileName }}</p>
+                <div class="flex gap-3 justify-end">
+                  <button
+                    type="button"
+                    class="px-5 py-2 rounded-[8px] text-sm text-[#7F8C8D] border border-[#E0E0E0] hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition-colors"
+                    @click="cancelDeleteDoc"
+                  >
+                    <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
+                      <span>Annuler</span>
+                      <span class="text-xs opacity-60">取消</span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    class="px-5 py-2 rounded-[8px] text-sm font-medium bg-[#C0392B] text-white hover:bg-[#a93226] transition-colors"
+                    @click="confirmDeleteDocFile"
+                  >
+                    <span class="inline-flex items-baseline gap-1 whitespace-nowrap">
+                      <span>Supprimer</span>
+                      <span class="text-xs opacity-70">删除</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Teleport>
 
           <!-- ── 预览 Dialog ──────────────────────────────────────────────── -->
           <Teleport to="body">
@@ -443,6 +485,9 @@ const docFiles = ref<Record<DocCategoryKey, DocumentItem[]>>({
 const expandedDoc = ref<DocCategoryKey | null>(null)
 // 预览
 const previewDoc = ref<DocumentItem | null>(null)
+// 删除确认
+const confirmDeleteDoc = ref<DocumentItem | null>(null)
+const confirmDialogRef = ref<HTMLElement | null>(null)
 
 const previewDialogRef = ref<HTMLElement | null>(null)
 
@@ -460,8 +505,20 @@ function closeDocPreview() {
   previewDoc.value = null
 }
 
-async function removeDocFile(doc: DocumentItem) {
-  if (!authStore.token) return
+async function requestDeleteDoc(doc: DocumentItem) {
+  confirmDeleteDoc.value = doc
+  await nextTick()
+  confirmDialogRef.value?.focus()
+}
+
+function cancelDeleteDoc() {
+  confirmDeleteDoc.value = null
+}
+
+async function confirmDeleteDocFile() {
+  const doc = confirmDeleteDoc.value
+  if (!doc || !authStore.token) return
+  confirmDeleteDoc.value = null
   try {
     const res = await deleteDocument(authStore.token, doc.id)
     if (res.code === 0) {
@@ -471,7 +528,7 @@ async function removeDocFile(doc: DocumentItem) {
       }
     }
   } catch {
-    // 网络异常时静默忽略，不影响界面状态
+    // 网络异常静默忽略
   }
 }
 

@@ -546,11 +546,12 @@ function closePreview() {
 }
 
 interface UploadedFile {
-  id: string
+  id: string        // 已存库文件的 id；待上传时为临时 uuid
   name: string
   size: number
   type: string
-  url: string
+  url: string       // 已存库文件的访问 url；待上传时为 blob URL（预览用）
+  pending?: File    // 存在则表示尚未上传，保存时才提交
 }
 
 type DocumentFiles = Record<DocumentCategoryKey, UploadedFile[]>
@@ -702,6 +703,12 @@ onMounted(async () => {
 
 onUnmounted(() => {
   if (successTimer) clearTimeout(successTimer)
+  // 释放所有未提交文件的 blob URL
+  for (const files of Object.values(form.documents)) {
+    for (const f of files) {
+      if (f.pending) URL.revokeObjectURL(f.url)
+    }
+  }
 })
 
 async function handleAvatarSelect(event: Event) {
@@ -742,24 +749,12 @@ async function handleAvatarSelect(event: Event) {
   }
 }
 
-async function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) {
+function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) {
   const input = event.target as HTMLInputElement
   const files = input.files
   if (!files?.length) return
 
   uploadError.value = ''
-
-  if (!authStore.token) {
-    uploadError.value = '登录状态已过期，请重新登录'
-    return
-  }
-  if (!profileId.value) {
-    uploadError.value = '档案信息加载中，请稍后再试'
-    return
-  }
-
-  const token = authStore.token
-  const pid = profileId.value
 
   const newItems: UploadedFile[] = []
 
@@ -772,29 +767,20 @@ async function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) 
       uploadError.value = `「${file.name}」超过 10MB 大小限制`
       continue
     }
-    try {
-      const res = await uploadDocument(token, pid, categoryKey, file)
-      if (res.code === 0 && res.data) {
-        newItems.push({
-          id: String(res.data.id),
-          name: res.data.fileName,
-          size: res.data.fileSize,
-          type: res.data.mimeType,
-          url: res.data.url,
-        })
-      } else {
-        uploadError.value = res.message || '上传失败'
-      }
-    } catch {
-      uploadError.value = `「${file.name}」上传失败，请稍后重试`
-    }
+    newItems.push({
+      id: `pending-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      url: URL.createObjectURL(file),
+      pending: file,
+    })
   }
 
   if (newItems.length) {
     const target = form.documents[categoryKey]
     if (Array.isArray(target)) {
       target.push(...newItems)
-      await nextTick()
     }
   }
 
@@ -802,12 +788,24 @@ async function handleFileSelect(categoryKey: DocumentCategoryKey, event: Event) 
 }
 
 async function removeFile(categoryKey: DocumentCategoryKey, fileId: string) {
+  const idx = form.documents[categoryKey].findIndex(f => f.id === fileId)
+  if (idx === -1) return
+
+  const file = form.documents[categoryKey][idx]
+
+  // 待上传文件：直接从内存移除，释放 blob URL
+  if (file.pending) {
+    URL.revokeObjectURL(file.url)
+    form.documents[categoryKey].splice(idx, 1)
+    return
+  }
+
+  // 已存库文件：调 API 删除
   if (!authStore.token) return
   try {
     const res = await deleteDocument(authStore.token, Number(fileId))
     if (res.code === 0) {
-      const idx = form.documents[categoryKey].findIndex(f => f.id === fileId)
-      if (idx !== -1) form.documents[categoryKey].splice(idx, 1)
+      form.documents[categoryKey].splice(idx, 1)
     } else {
       uploadError.value = res.message || '删除失败'
     }
@@ -830,8 +828,45 @@ function handleCancel() {
 
 async function handleSave() {
   if (!authStore.token) return
+  // profileId 未加载时，有待上传文件则提示等待
+  const hasPending = Object.values(form.documents).some(files => files.some(f => f.pending))
+  if (hasPending && !profileId.value) {
+    uploadError.value = '档案信息尚未加载，请稍后重试'
+    return
+  }
   saving.value = true
   try {
+    // 先批量上传所有待上传文件
+    if (profileId.value) {
+      for (const categoryKey of Object.keys(form.documents) as DocumentCategoryKey[]) {
+        const pending = form.documents[categoryKey].filter(f => f.pending)
+        for (const item of pending) {
+          try {
+            const res = await uploadDocument(authStore.token, profileId.value, categoryKey, item.pending!)
+            if (res.code === 0 && res.data) {
+              const idx = form.documents[categoryKey].findIndex(f => f.id === item.id)
+              if (idx !== -1) {
+                URL.revokeObjectURL(item.url)
+                form.documents[categoryKey][idx] = {
+                  id: String(res.data.id),
+                  name: res.data.fileName,
+                  size: res.data.fileSize,
+                  type: res.data.mimeType,
+                  url: res.data.url,
+                }
+              }
+            } else {
+              uploadError.value = res.message || `「${item.name}」上传失败`
+              return
+            }
+          } catch {
+            uploadError.value = `「${item.name}」上传失败，请稍后重试`
+            return
+          }
+        }
+      }
+    }
+
     const res = await updateProfile(authStore.token, {
       displayName: form.displayName || null,
       title: form.title || null,
@@ -869,7 +904,7 @@ async function handleSave() {
       successTimer = setTimeout(() => {
         saveSuccess.value = false
         router.push('/profile')
-      }, 0)
+      }, 1200)
     } else {
       uploadError.value = res.message || '保存失败'
     }

@@ -4,9 +4,10 @@ import { ref, computed, readonly } from 'vue'
 import * as authApi from '@/api/auth'
 import type { AuthUser } from '@/api/auth'
 
-// Token 仅保存在内存中；迁移至 httpOnly Cookie 后可实现跨页刷新持久化登录
+export const TOKEN_KEY = 'zhen_artist_token'
+
 export const useAuthStore = defineStore('auth', () => {
-  const _token = ref<string>('')
+  const _token = ref<string>(localStorage.getItem(TOKEN_KEY) ?? '')
   const user = ref<AuthUser | null>(null)
   const token = readonly(_token)
 
@@ -15,6 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
   function clearSession() {
     _token.value = ''
     user.value = null
+    localStorage.removeItem(TOKEN_KEY)
   }
 
   async function login(email: string, password: string) {
@@ -23,6 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
       if (data.code === 0 && data.data) {
         _token.value = data.data.token
         user.value = data.data.user
+        localStorage.setItem(TOKEN_KEY, data.data.token)
         return { success: true as const }
       }
       return { success: false as const, message: data.message }
