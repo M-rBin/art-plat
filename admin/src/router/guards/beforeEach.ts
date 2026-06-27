@@ -10,7 +10,7 @@ import { registerDynamicRoutes } from '../utils/registerRoutes'
 import { AppRouteRecord } from '@/types/router'
 import { RoutesAlias } from '../routesAlias'
 import { menuDataToRouter } from '../utils/menuToRouter'
-import { asyncRoutes } from '../routes/asyncRoutes'
+import { asyncRoutes, detailRoutes } from '../routes/asyncRoutes'
 import { staticRoutes } from '../routes/staticRoutes'
 import { loadingService } from '@/utils/ui'
 import { useCommon } from '@/composables/useCommon'
@@ -170,13 +170,14 @@ async function handleRouteGuard(
   // 所有路由已在 asyncRoutes 中静态配置，无需动态加载
   const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
   if (USE_MOCK && !isRouteRegistered.value) {
-    // 标记路由已注册（跳过动态路由逻辑）
     isRouteRegistered.value = true
-
-    // 设置菜单数据（从已注册的路由构建，确保路径完整）
     const menuStore = useMenuStore()
     const menuTree = buildMenuTreeFromRoutes(router)
     menuStore.setMenuList(menuTree)
+    registerDetailRoutesUnderParent(router)
+    // addRoute 不回溯更新当前 to.matched，需要二次导航让新路由生效
+    next({ path: to.path, query: to.query, hash: to.hash, replace: true })
+    return
   }
 
   // 处理动态路由注册（Mock 模式下跳过）
@@ -397,12 +398,29 @@ async function registerAndStoreMenu(router: Router, menuList: AppRouteRecord[]):
     throw new Error('获取菜单列表失败，请重新登录')
   }
   const menuStore = useMenuStore()
-  // 递归过滤掉为空的菜单项
   const list = filterEmptyMenus(menuList)
   menuStore.setMenuList(list)
   registerDynamicRoutes(router, list)
+  // 详情页挂到 Artist 父路由下，确保在 layout 内容区渲染
+  registerDetailRoutesUnderParent(router)
   isRouteRegistered.value = true
   useWorktabStore().validateWorktabs(router)
+}
+
+/**
+ * 将 detailRoutes 注册为指定父路由的子路由，使其在 layout 内容区渲染。
+ * 用 hasRoute 保护，重复调用幂等。
+ */
+function registerDetailRoutesUnderParent(router: Router): void {
+  for (const route of detailRoutes) {
+    if (route.name && router.hasRoute(route.name)) continue
+    const parentName = (route.meta as any)?._parentName ?? 'Artist'
+    if (router.hasRoute(parentName)) {
+      router.addRoute(parentName, route as any)
+    } else {
+      console.warn(`[Router] 父路由 "${parentName}" 未找到，详情路由 "${String(route.name)}" 未注册，请检查菜单配置`)
+    }
+  }
 }
 
 /**

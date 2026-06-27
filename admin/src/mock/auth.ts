@@ -163,145 +163,134 @@ export function mockGetUserInfo(token: string) {
 }
 
 /**
- * Mock 菜单树数据（用于动态路由）
+ * Mock 菜单树数据（frontend 权限模式下的动态路由来源）
+ * 结构与后端 MenuService.getUserMenuTree 返回格式保持一致：
+ * - 目录(type=0)：component='/index/index'，path 为完整路由前缀
+ * - 菜单(type=1)：component 为路由路径，path 为末段片段（由 menuDataToRouter 拼接还原完整路径）
  */
 export const MOCK_MENU_TREE = [
   {
     id: 1,
-    name: 'Dashboard',
-    path: '/dashboard',
-    component: 'index',
+    name: 'Organization',
+    path: '/organization',
+    component: '/index/index',
     meta: {
-      title: '仪表盘',
-      icon: 'dashboard',
-      isHideTab: false
+      title: '组织管理',
+      icon: 'OfficeBuilding',
+      keepAlive: false,
+      isHide: false
+    },
+    children: [
+      {
+        id: 2,
+        name: 'OrganizationDepartment',
+        path: 'department',
+        component: '/organization/department',
+        meta: {
+          title: '部门管理',
+          icon: 'Share',
+          keepAlive: true,
+          isHide: false
+        }
+      },
+      {
+        id: 3,
+        name: 'OrganizationUser',
+        path: 'user',
+        component: '/organization/user',
+        meta: {
+          title: '人员管理',
+          icon: 'User',
+          keepAlive: true,
+          isHide: false
+        }
+      },
+      {
+        id: 4,
+        name: 'OrganizationPosition',
+        path: 'position',
+        component: '/organization/position',
+        meta: {
+          title: '岗位管理',
+          icon: 'Postcard',
+          keepAlive: true,
+          isHide: false
+        }
+      }
+    ]
+  },
+  {
+    id: 5,
+    name: 'Permission',
+    path: '/permission',
+    component: '/index/index',
+    meta: {
+      title: '权限管理',
+      icon: 'Lock',
+      keepAlive: false,
+      isHide: false
+    },
+    children: [
+      {
+        id: 6,
+        name: 'PermissionRole',
+        path: 'role',
+        component: '/permission/role',
+        meta: {
+          title: '角色管理',
+          icon: 'Avatar',
+          keepAlive: true,
+          isHide: false
+        }
+      },
+      {
+        id: 7,
+        name: 'PermissionMenu',
+        path: 'menu',
+        component: '/permission/menu',
+        meta: {
+          title: '菜单管理',
+          icon: 'Menu',
+          keepAlive: true,
+          isHide: false
+        }
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: 'Artist',
+    path: '/artist',
+    component: '/index/index',
+    meta: {
+      title: '艺术家管理',
+      icon: 'User',
+      keepAlive: false,
+      isHide: false
     },
     children: [
       {
         id: 11,
-        name: 'DashboardConsole',
-        path: '/dashboard/console',
-        component: 'dashboard/console/index',
+        name: 'ArtistQuestions',
+        path: 'questions',
+        component: '/artist/questions',
         meta: {
-          title: '控制台',
-          icon: 'console',
-          isHideTab: false
+          title: '问题库管理',
+          icon: 'QuestionFilled',
+          keepAlive: true,
+          isHide: false
         }
       },
       {
         id: 12,
-        name: 'DashboardAnalysis',
-        path: '/dashboard/analysis',
-        component: 'dashboard/analysis/index',
+        name: 'ArtistAccounts',
+        path: 'accounts',
+        component: '/artist/accounts',
         meta: {
-          title: '分析页',
-          icon: 'analysis',
-          isHideTab: false
-        }
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Prototype',
-    path: '/prototype',
-    component: 'index',
-    meta: {
-      title: '原型中心',
-      icon: 'prototype',
-      isHideTab: false
-    },
-    children: [
-      {
-        id: 21,
-        name: 'PrototypeList',
-        path: '/prototype/list',
-        component: 'prototype/list/index',
-        meta: {
-          title: '原型列表',
-          icon: 'list',
-          isHideTab: false
-        }
-      },
-      {
-        id: 22,
-        name: 'PrototypeCategory',
-        path: '/prototype/category',
-        component: 'prototype/category/index',
-        meta: {
-          title: '原型分类',
-          icon: 'category',
-          isHideTab: false
-        }
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'ChartWorkshop',
-    path: '/chart-workshop',
-    component: 'index',
-    meta: {
-      title: '图表工作坊',
-      icon: 'chart',
-      isHideTab: false
-    },
-    children: [
-      {
-        id: 31,
-        name: 'UserCharts',
-        path: '/chart-workshop/user-charts',
-        component: 'chart-workshop/user-charts/index',
-        meta: {
-          title: '我的图表',
-          icon: 'user-chart',
-          isHideTab: false
-        }
-      },
-      {
-        id: 32,
-        name: 'ChartGallery',
-        path: '/chart-workshop/gallery',
-        component: 'chart-workshop/gallery/index',
-        meta: {
-          title: '图表画廊',
-          icon: 'gallery',
-          isHideTab: false
-        }
-      }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Template',
-    path: '/template',
-    component: 'index',
-    meta: {
-      title: '模板展示',
-      icon: 'template',
-      isHideTab: false
-    },
-    children: [
-      {
-        id: 41,
-        name: 'TemplateCards',
-        path: '/template/cards',
-        component: 'template/cards/index',
-        meta: {
-          title: '卡片',
-          icon: 'card',
-          isHideTab: false
-        }
-      },
-      {
-        id: 42,
-        name: 'TemplateCharts',
-        path: '/template/charts',
-        component: 'template/charts/index',
-        meta: {
-          title: '图表',
-          icon: 'chart',
-          isHideTab: false
+          title: '艺术家账号',
+          icon: 'Avatar',
+          keepAlive: true,
+          isHide: false
         }
       }
     ]

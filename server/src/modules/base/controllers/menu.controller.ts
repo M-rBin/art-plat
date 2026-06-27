@@ -9,11 +9,12 @@ import { MenuVo } from '../vo/base.vo';
  * 系统菜单控制器
  * 提供菜单/权限点的增删改查接口，菜单数据驱动前端路由与按钮级权限。
  * 列表查询支持按名称（name）模糊检索，并可按类型（type）、父级（parentId）精确过滤。
+ * update-status 通过基类 statusField() 钩子映射到 isShow 字段。
  */
 @ApiTags('系统菜单')
 @CrudController({
   prefix: 'admin/sys/menu',
-  api: ['add', 'delete', 'update', 'info', 'list'],
+  api: ['add', 'delete', 'update', 'update-status', 'info', 'list'],
   pageQueryOp: {
     keyWordLikeFields: ['name'],
     fieldEq: ['type', 'parentId'],
@@ -22,6 +23,11 @@ import { MenuVo } from '../vo/base.vo';
 export class MenuController extends CrudControllerFactory(MenuVo) {
   constructor(private readonly menuService: MenuService) {
     super(menuService);
+  }
+
+  /** 菜单用 isShow 控制显示/隐藏，覆盖基类默认的 status 字段 */
+  protected statusField(): string {
+    return 'isShow';
   }
 
   /**

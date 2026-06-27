@@ -1,22 +1,22 @@
 import { AppRouteRecord } from '@/types/router'
 
 /**
- * 权限管理模版路由
+ * 权限管理路由
  * 包含：角色管理、菜单管理
  */
 export const permissionTemplateRoutes: AppRouteRecord = {
-  path: '/permission-template',
-  name: 'PermissionTemplate',
+  path: '/permission',
+  name: 'Permission',
   component: () => import('@/views/index/index.vue'),
   meta: {
     title: 'menus.permissionTemplate.title',
-    icon: 'Lock', // 权限管理
+    icon: 'Lock',
     isFirstLevel: true
   },
   children: [
     {
       path: '',
-      name: 'PermissionTemplateIndex',
+      name: 'PermissionIndex',
       component: () => import('@/views/permission/role/index.vue'),
       meta: {
         title: 'menus.permissionTemplate.title',
@@ -26,7 +26,7 @@ export const permissionTemplateRoutes: AppRouteRecord = {
     },
     {
       path: 'role',
-      name: 'PermissionTemplateRole',
+      name: 'PermissionRole',
       component: () => import('@/views/permission/role/index.vue'),
       meta: {
         title: 'menus.permissionTemplate.role',
@@ -35,7 +35,7 @@ export const permissionTemplateRoutes: AppRouteRecord = {
     },
     {
       path: 'menu',
-      name: 'PermissionTemplateMenu',
+      name: 'PermissionMenu',
       component: () => import('@/views/permission/menu/index.vue'),
       meta: {
         title: 'menus.permissionTemplate.menu',

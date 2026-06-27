@@ -2,7 +2,9 @@ import { AppRouteRecord } from '@/types/router'
 
 /**
  * 艺术家管理路由
- * 包含：问题库管理、艺术家账号列表（及档案/文件子页）
+ * 包含：问题库管理、艺术家账号列表
+ * 注：档案/文件详情页（accounts/:id/profile、accounts/:id/documents）为独立顶层路由，
+ * 定义在 router/routes/asyncRoutes.ts 的 detailRoutes，所有权限模式下均静态注册。
  */
 export const artistRoutes: AppRouteRecord = {
   path: '/artist',
@@ -40,26 +42,6 @@ export const artistRoutes: AppRouteRecord = {
       meta: {
         title: 'menus.artist.accounts',
         keepAlive: true,
-      },
-    },
-    {
-      path: 'accounts/:id/profile',
-      name: 'ArtistAccountProfile',
-      component: () => import('@/views/artist/accounts/profile.vue'),
-      meta: {
-        title: 'menus.artist.profile',
-        keepAlive: false,
-        isHide: true,
-      },
-    },
-    {
-      path: 'accounts/:id/documents',
-      name: 'ArtistAccountDocuments',
-      component: () => import('@/views/artist/accounts/documents.vue'),
-      meta: {
-        title: 'menus.artist.documents',
-        keepAlive: false,
-        isHide: true,
       },
     },
   ],

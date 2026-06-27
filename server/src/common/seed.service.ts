@@ -73,13 +73,13 @@ export class SeedService {
       data: { name: '组织管理', type: 0, router: '/organization', icon: 'OfficeBuilding', orderNum: 1 },
     });
     await this.prisma.sysMenu.create({
-      data: { name: '部门管理', type: 1, router: '/organization/department', perms: 'sys:department:list', orderNum: 1, parentId: orgDir.id },
+      data: { name: '部门管理', type: 1, router: '/organization/department', perms: 'sys:department:list', icon: 'Share', orderNum: 1, parentId: orgDir.id },
     });
     await this.prisma.sysMenu.create({
-      data: { name: '人员管理', type: 1, router: '/organization/user', perms: 'sys:user:list', orderNum: 2, parentId: orgDir.id },
+      data: { name: '人员管理', type: 1, router: '/organization/user', perms: 'sys:user:list', icon: 'User', orderNum: 2, parentId: orgDir.id },
     });
     await this.prisma.sysMenu.create({
-      data: { name: '岗位管理', type: 1, router: '/organization/position', perms: 'sys:position:list', orderNum: 3, parentId: orgDir.id },
+      data: { name: '岗位管理', type: 1, router: '/organization/position', perms: 'sys:position:list', icon: 'Postcard', orderNum: 3, parentId: orgDir.id },
     });
 
     // 权限管理
@@ -88,10 +88,21 @@ export class SeedService {
     });
     // 仅建目录与菜单（type 0/1）；按钮（type 2）由 PermsSyncService 启动时自动登记
     await this.prisma.sysMenu.create({
-      data: { name: '角色管理', type: 1, router: '/permission/role', perms: 'sys:role:list', orderNum: 1, parentId: permDir.id },
+      data: { name: '角色管理', type: 1, router: '/permission/role', perms: 'sys:role:list', icon: 'Avatar', orderNum: 1, parentId: permDir.id },
     });
     await this.prisma.sysMenu.create({
-      data: { name: '菜单管理', type: 1, router: '/permission/menu', perms: 'sys:menu:list', orderNum: 2, parentId: permDir.id },
+      data: { name: '菜单管理', type: 1, router: '/permission/menu', perms: 'sys:menu:list', icon: 'Menu', orderNum: 2, parentId: permDir.id },
+    });
+
+    // 艺术家管理
+    const artistDir = await this.prisma.sysMenu.create({
+      data: { name: '艺术家管理', type: 0, router: '/artist', icon: 'User', orderNum: 3 },
+    });
+    await this.prisma.sysMenu.create({
+      data: { name: '问题库管理', type: 1, router: '/artist/questions', perms: 'artist:question:list', icon: 'QuestionFilled', keepAlive: 1, orderNum: 1, parentId: artistDir.id },
+    });
+    await this.prisma.sysMenu.create({
+      data: { name: '艺术家账号', type: 1, router: '/artist/accounts', perms: 'artist:account:list', icon: 'Avatar', keepAlive: 1, orderNum: 2, parentId: artistDir.id },
     });
 
     this.logger.log('系统菜单已初始化（按钮权限由 PermsSyncService 自动登记）');

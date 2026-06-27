@@ -154,7 +154,7 @@ export interface AdminProfileData {
     phone: string | null
   }
   quoteParagraphs: Array<{ questionId: number; answer: string }>
-  galleries: Array<{ name: string | null; location: string | null; logoUrl: string | null; sortOrder: number }>
+  galleries: Array<{ name: string | null; location: string | null; logoUrl: string | null; sortOrder?: number }>
 }
 
 /**

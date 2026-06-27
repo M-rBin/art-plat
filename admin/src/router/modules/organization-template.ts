@@ -5,8 +5,8 @@ import { AppRouteRecord } from '@/types/router'
  * 包含：部门管理、人员管理、岗位管理
  */
 export const organizationTemplateRoutes: AppRouteRecord = {
-  path: '/organization-template',
-  name: 'OrganizationTemplate',
+  path: '/organization',
+  name: 'Organization',
   component: () => import('@/views/index/index.vue'),
   meta: {
     title: 'menus.organizationTemplate.title',
@@ -16,7 +16,7 @@ export const organizationTemplateRoutes: AppRouteRecord = {
   children: [
     {
       path: '',
-      name: 'OrganizationTemplateIndex',
+      name: 'OrganizationIndex',
       component: () => import('@/views/organization/department/index.vue'),
       meta: {
         title: 'menus.organizationTemplate.title',
@@ -26,7 +26,7 @@ export const organizationTemplateRoutes: AppRouteRecord = {
     },
     {
       path: 'department',
-      name: 'OrganizationTemplateDepartment',
+      name: 'OrganizationDepartment',
       component: () => import('@/views/organization/department/index.vue'),
       meta: {
         title: 'menus.organizationTemplate.department',
@@ -35,7 +35,7 @@ export const organizationTemplateRoutes: AppRouteRecord = {
     },
     {
       path: 'user',
-      name: 'OrganizationTemplateUser',
+      name: 'OrganizationUser',
       component: () => import('@/views/organization/user/index.vue'),
       meta: {
         title: 'menus.organizationTemplate.user',
@@ -44,7 +44,7 @@ export const organizationTemplateRoutes: AppRouteRecord = {
     },
     {
       path: 'position',
-      name: 'OrganizationTemplatePosition',
+      name: 'OrganizationPosition',
       component: () => import('@/views/organization/position/index.vue'),
       meta: {
         title: 'menus.organizationTemplate.position',

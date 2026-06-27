@@ -229,7 +229,7 @@ const quoteAnswer = ref('')
 // ── 表单状态 ──────────────────────────────────────────────────────────────
 const formRef = ref()
 const form = reactive<Omit<AdminProfileData, 'id' | 'quoteParagraphs' | 'galleries'> & {
-  galleries: Array<{ name: string | null; location: string | null; logoUrl: string | null; sortOrder: number }>
+  galleries: Array<{ name: string | null; location: string | null; logoUrl: string | null }>
 }>({
   displayName: null,
   title: null,
@@ -269,7 +269,7 @@ async function loadData() {
       Object.assign(form.personal, p.personal ?? {})
       Object.assign(form.contact, p.contact ?? {})
       form.galleries = (p.galleries ?? []).map((g) => ({
-        name: g.name, location: g.location, logoUrl: g.logoUrl, sortOrder: g.sortOrder,
+        name: g.name, location: g.location, logoUrl: g.logoUrl,
       }))
       const firstQuote = p.quoteParagraphs?.[0]
       if (firstQuote) {
@@ -285,7 +285,7 @@ async function loadData() {
 // ── 画廊操作 ──────────────────────────────────────────────────────────────
 function addGallery() {
   if (form.galleries.length >= 20) return
-  form.galleries.push({ name: null, location: null, logoUrl: null, sortOrder: form.galleries.length })
+  form.galleries.push({ name: null, location: null, logoUrl: null })
 }
 
 function removeGallery(idx: number) {

@@ -92,6 +92,14 @@ export class CrudControllerBase extends BaseController {
     return this.ok(await this.service.update(id, data));
   }
 
+  /**
+   * 状态字段名钩子，子类可覆盖以适配不同表结构（如 SysMenu 用 isShow 而非 status）
+   * @returns Prisma 模型中实际的状态字段名
+   */
+  protected statusField(): string {
+    return 'status';
+  }
+
   /** 修改状态：PUT {base}/update-status（body: {id, status}） */
   @Put('update-status')
   @Perms('update-status')
@@ -100,7 +108,7 @@ export class CrudControllerBase extends BaseController {
   async updateStatus(@Body() body: { id: number; status: number }) {
     if (!body.id || typeof body.id !== 'number') return this.fail('id 不能为空');
     if (typeof body.status !== 'number') return this.fail('status 必须为数字');
-    return this.ok(await this.service.update(body.id, { status: body.status }));
+    return this.ok(await this.service.update(body.id, { [this.statusField()]: body.status }));
   }
 
   /** 单删：DELETE {base}/delete/:id */

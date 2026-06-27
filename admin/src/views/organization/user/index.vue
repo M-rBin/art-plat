@@ -145,7 +145,7 @@
         <ElFormItem label="所属部门" prop="departmentId">
           <ElTreeSelect
             v-model="form.departmentId"
-            :data="departmentTree.filter((d: any) => d.id !== 0)"
+            :data="departmentSelectOptions"
             :props="{ label: 'name' }"
             node-key="id"
             placeholder="请选择部门"
@@ -227,6 +227,10 @@
   const deptFilterText = ref('')
   const departmentTree = ref<Department[]>([])
   const selectedDeptId = ref<number>()
+  // 弹窗中部门选择器的数据（排除"全部"虚拟节点）
+  const departmentSelectOptions = computed(() =>
+    departmentTree.value.filter((d) => d.id !== 0)
+  )
 
   // 表格
   const tableRef = ref()
