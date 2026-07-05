@@ -392,7 +392,7 @@
                 <input
                   :id="`upload-${category.key}`"
                   type="file"
-                  class="sr-only"
+                  class="hidden"
                   accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
                   multiple
                   @change="handleFileSelect(category.key, $event)"
